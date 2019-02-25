@@ -1,0 +1,66 @@
+# R Wu
+# 1-22-2019
+# SOP-1482
+
+renyi@SOP-1482:/share/Renyi/RNA_Jan2019/fastq$ ln -s /datastorage/2019/RNA/January/30_166104364/*.gz .
+
+
+renyi@SOP-1482:/share/Renyi/RNA_Jan2019/fastq$ ls
+'
+A1_R1_001.fastq.gz      RA-ANT1-UA_R1_001.fastq.gz   S6-0h_R1_001.fastq.gz
+A1_R2_001.fastq.gz      RA-ANT1-UA_R2_001.fastq.gz   S6-0h_R2_001.fastq.gz
+A2_R1_001.fastq.gz      RA-ANT2-UA_R1_001.fastq.gz   S6-4h_R1_001.fastq.gz
+A2_R2_001.fastq.gz      RA-ANT2-UA_R2_001.fastq.gz   S6-4h_R2_001.fastq.gz
+B1_R1_001.fastq.gz      RA-con-ANT1_R1_001.fastq.gz  S7-0h_R1_001.fastq.gz
+B1_R2_001.fastq.gz      RA-con-ANT1_R2_001.fastq.gz  S7-0h_R2_001.fastq.gz
+B2_R1_001.fastq.gz      RA-con-ANT2_R1_001.fastq.gz  S7-4h_R1_001.fastq.gz
+B2_R2_001.fastq.gz      RA-con-ANT2_R2_001.fastq.gz  S7-4h_R2_001.fastq.gz
+Conc1_R1_001.fastq.gz   RA-WT-ANT2_R1_001.fastq.gz   S8-0h_R1_001.fastq.gz
+Conc1_R2_001.fastq.gz   RA-WT-ANT2_R2_001.fastq.gz   S8-0h_R2_001.fastq.gz
+Conc2_R1_001.fastq.gz   RA-WT-ANT3_R1_001.fastq.gz   S8-4h_R1_001.fastq.gz
+Conc2_R2_001.fastq.gz   RA-WT-ANT3_R2_001.fastq.gz   S8-4h_R2_001.fastq.gz
+DEL1_R1_001.fastq.gz    S10-0h_R1_001.fastq.gz       S9-0h_R1_001.fastq.gz
+DEL1_R2_001.fastq.gz    S10-0h_R2_001.fastq.gz       S9-0h_R2_001.fastq.gz
+DEL2_R1_001.fastq.gz    S10-4h_R1_001.fastq.gz       S9-4h_R1_001.fastq.gz
+DEL2_R2_001.fastq.gz    S10-4h_R2_001.fastq.gz       S9-4h_R2_001.fastq.gz
+PEITC1_R1_001.fastq.gz  S1-0h_R1_001.fastq.gz        SB1_R1_001.fastq.gz
+PEITC1_R2_001.fastq.gz  S1-0h_R2_001.fastq.gz        SB1_R2_001.fastq.gz
+PEITC2_R1_001.fastq.gz  S1-4h_R1_001.fastq.gz        SB2_R1_001.fastq.gz
+PEITC2_R2_001.fastq.gz  S1-4h_R2_001.fastq.gz        SB2_R2_001.fastq.gz
+'
+
+renyi@SOP-1482:/datastorage/2019/RNA/January/30_166104364$ sh ~/tools/bioseq/fastqc-0.2.sh 
+
+
+renyi@SOP-1482:/datastorage/2019/RNA/January/30_166104364$ for i in *R1*.gz; do trim_galore --paired --trim1  $i ${i%R1_001.fastq.gz}R2_001.fastq.gz; done
+
+# or in parallel
+ renyi@SOP-1482:/share/Renyi/RNA_Jan2019/trim$ time parallel -j 6 trim_galore --paired --trim1 {}R1_001.fastq.gz {}R2_001.fastq.gz ::: $(ls ../fastq/*R1*fastq.gz | sed 's/R1_001.fastq.gz//')
+real	263m49.123s
+user	2693m26.980s
+sys	51m29.204s
+
+# output file name examples:
+# sample1_R1_001_val_1.fq.gz
+# sample1_R2_001_val_2.fq.gz
+
+# mouse samples
+for i in RA*val_1.fq.gz; do ( hisat2 -p 6 -x ~/genomes/Mus_musculus/UCSC/mm10/Hisat2_Genome/genome -k 1 -1 ${i} -2 ${i%R1_001_val_1.fq.gz}R2_001_val_2.fq.gz | samtools view -bh -o ../bam/${i%_R1_001_val_1.fq.gz}.bam ); done
+
+cd ../bam/
+
+
+for i in RA*.bam; do samtools sort -@ 6 -o ${i%.bam}.sorted.bam $i; done && for i in RA*.sorted.bam; do java -jar ~/tools/picard/picard.jar MarkDuplicates I=$i O=${i%.sorted.bam}.dedup.bam M=${i%.sorted.bam}.dedup.txt REMOVE_DUPLICATES=true; done && featureCounts --primary -p -T 8 -a ~/genomes/Mus_musculus/UCSC/mm10/Annotation/Genes/genes.gtf  -o mouse.featurecounts.results.csv RA*dup.bam
+
+# can run picard in parallel with gnu parallel. must set -j to 4 which uses ~60GB RAM.
+
+# human samples
+for i in [!R]*val_1.fq.gz; do ( hisat2 -p 6 -x ~/genomes/Homo_sapiens/UCSC/hg19/Hisat2_Genome/genome -k 1 -1 ${i} -2 ${i%R1_001_val_1.fq.gz}R2_001_val_2.fq.gz | samtools view -bh -o ../bam/${i%_R1_001_val_1.fq.gz}.bam ); done
+
+cd ../bam/
+for i in [!R]*.bam; do samtools sort -@ 6 -o ${i%.bam}.sorted.bam $i; done && for i in [!R]*.sorted.bam; do java -jar ~/tools/picard/picard.jar MarkDuplicates I=$i O=${i%.sorted.bam}.dedup.bam M=${i%.sorted.bam}.dedup.txt REMOVE_DUPLICATES=true; done && featureCounts --primary -p -T 8 -a ~/genomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf  -o hct116.featurecounts.results.csv Co*dup.bam PEI*dup.bam SB*dup.bam DEL*dup.bam A[12]*dup.bam B[12]*dup.bam && featureCounts --primary -p -T 8 -a ~/genomes/Homo_sapiens/UCSC/hg19/Annotation/Genes/genes.gtf  -o human.curcumin.featurecounts.results.csv S[12678]*dup.bam
+
+
+
+ 
+ 

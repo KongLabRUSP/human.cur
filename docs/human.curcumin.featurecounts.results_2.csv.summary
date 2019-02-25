@@ -1,0 +1,13 @@
+Status	S10-0h.sorted.dedup.bam	S10-4h.sorted.dedup.bam	S1-0h.sorted.dedup.bam	S1-4h.sorted.dedup.bam	S6-0h.sorted.dedup.bam	S6-4h.sorted.dedup.bam	S7-0h.sorted.dedup.bam	S7-0h-to.sorted.dedup.bam	S7-4h.sorted.dedup.bam	S8-0h.sorted.dedup.bam	S8-4h.sorted.dedup.bam	S9-0h.sorted.dedup.bam	S9-4h.sorted.dedup.bam
+Assigned	4442920	4375134	6625547	10936152	9814122	7023686	3627695	5298435	4928654	3817351	3623887	5195738	4365240
+Unassigned_Unmapped	3388056	3156913	9081230	3857823	4014456	9032637	3175883	5049658	3587687	3669578	3058227	2745608	2440901
+Unassigned_MappingQuality	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Chimera	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_FragmentLength	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Duplicate	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_MultiMapping	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Secondary	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Nonjunction	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_NoFeatures	3562180	3910705	5545436	7521273	8980045	7352479	3308335	4778042	4053201	3244646	3512626	5046300	3554714
+Unassigned_Overlapping_Length	0	0	0	0	0	0	0	0	0	0	0	0	0
+Unassigned_Ambiguity	133585	129014	212038	338912	282706	204834	114747	166541	158296	116280	108282	161739	140109
