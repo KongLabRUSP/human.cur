@@ -1,13 +1,13 @@
 Sample  ,Sex,Sample_Name,Subject_ID,Time,Conc (ng/µL)
-13,Male,S1-0h,1,0,3187
-14,Male,S1-4h,1,4,3005
-15,Male,S6-0h,6,0,2971
-16,Male,S6-4h,6,4,1998
-17,Male,S7-0h,7,0,2420
-18,Male,S7-4h,7,4,2409
-19,Female,S8-0h,8,0,2782
-20,Female,S8-4h,8,4,2391
-21,Female,S9-0h,9,0,1916
-22,Female,S9-4h,9,4,3090
-23,Female,S10-0h,10,0,2111
-24,Female,S10-4h,10,4,2235
+13,Male,S1-0h,S1,0,3187
+14,Male,S1-4h,S1,4,3005
+15,Male,S6-0h,S6,0,2971
+16,Male,S6-4h,S6,4,1998
+17,Male,S7-0h,S7,0,2420
+18,Male,S7-4h,S7,4,2409
+19,Female,S8-0h,S8,0,2782
+20,Female,S8-4h,S8,4,2391
+21,Female,S9-0h,S9,0,1916
+22,Female,S9-4h,S9,4,3090
+23,Female,S10-0h,S10,0,2111
+24,Female,S10-4h,S10,4,2235
